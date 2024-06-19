@@ -67,29 +67,34 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             raise RequestHumanTakeover
 
         # 只探索7次
-        if explorationConfig.exploration_config.attack_number == AttackNumber.SEVEN:
-            count = 0
-            while count < 7:
-                if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
-                    self.click(self.I_E_EXPLORATION_CLICK)
-                    count += 1
-                    # 进入战斗环节
-                    self.battle_process()
-                if self.appear(self.I_EXPLORATION_TITLE):
-                    self.open_expect_level()
+        max_exploration_time = explorationConfig.exploration_config.attack_number
+        if explorationConfig.exploration_config.attack_number != AttackNumber.SEVEN:
+            try:
+                max_exploration_time = int(explorationConfig.exploration_config.current_exploration_times)
+            except Exception as e:
+                max_exploration_time = AttackNumber.SEVEN
+        count = 0
+        while count < max_exploration_time:
+            if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
+                self.click(self.I_E_EXPLORATION_CLICK)
+                count += 1
+                # 进入战斗环节
+                self.battle_process()
+            if self.appear(self.I_EXPLORATION_TITLE):
+                self.open_expect_level()
 
-            if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
-                self.appear_then_click(self.I_RED_CLOSE)
-            self.ui_goto(page_main)
-            # 关闭 buff
-            if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
-                self.open_buff()
-                self.gold_50(is_open=False)
-                self.gold_100(is_open=False)
-                self.exp_50(is_open=False)
-                self.exp_100(is_open=False)
-                self.close_buff()
-            self.set_next_run(task='Exploration', success=True, finish=False)
+        if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
+            self.appear_then_click(self.I_RED_CLOSE)
+        self.ui_goto(page_main)
+        # 关闭 buff
+        if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
+            self.open_buff()
+            self.gold_50(is_open=False)
+            self.gold_100(is_open=False)
+            self.exp_50(is_open=False)
+            self.exp_100(is_open=False)
+            self.close_buff()
+        self.set_next_run(task='Exploration', success=True, finish=False)
         raise TaskEnd
 
     # 查找指定的章节：
