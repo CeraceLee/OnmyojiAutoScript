@@ -67,7 +67,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             raise RequestHumanTakeover
 
         # 只探索7次
-        max_exploration_time = explorationConfig.exploration_config.attack_number
+        max_exploration_time = int(explorationConfig.exploration_config.attack_number)
         if explorationConfig.exploration_config.attack_number != AttackNumber.SEVEN:
             try:
                 max_exploration_time = int(explorationConfig.exploration_config.current_exploration_times)
