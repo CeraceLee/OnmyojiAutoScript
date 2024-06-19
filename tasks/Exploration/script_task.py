@@ -72,7 +72,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             try:
                 max_exploration_time = int(explorationConfig.exploration_config.current_exploration_times)
             except Exception as e:
-                max_exploration_time = AttackNumber.SEVEN
+                max_exploration_time = int(AttackNumber.SEVEN)
         count = 0
         while count < max_exploration_time:
             if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
